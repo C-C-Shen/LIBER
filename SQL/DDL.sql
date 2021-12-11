@@ -46,14 +46,14 @@ create table if not exists Publisher
 	);
 	
 create table if not exists Book
-	(ISBN			varchar(15),
+	(ISBN			varchar(30),
 	 title			varchar(50) not null,
 	 author_name		varchar(50) not null,
-	 genre 			varchar(15) not null,
+	 genre 			varchar(30) not null,
 	 publisher_id 		int not null,
 	 number_of_pages 	int not null,
-	 cost 			numeric(3,2) not null,
-	 price 			numeric(3,2) not null,
+	 cost 			numeric(4,2) not null,
+	 price 			numeric(4,2) not null,
 	 publisher_percent 	numeric(2,2) not null,
 	 stock 			int not null,
 	 threshold 		int not null,
@@ -94,10 +94,10 @@ create table if not exists BankAccount
 	);
 	
 create table if not exists Sales
-	(ISBN 			varchar(15),
+	(ISBN 			varchar(30),
 	 month 			varchar(20) check (month in ('January','February','March','April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 	 year 			int check (year > 1900 and year < 2022),
-	 total_sales_value 	Numeric(12,2) not null,
+	 quantity		int not null,
 	 primary key (ISBN, month, year),
 	 foreign key (ISBN) references Book
 	 	on delete cascade
@@ -118,7 +118,7 @@ create table if not exists Orders
 	);
 
 create table if not exists manage
-	(ISBN			varchar(15),
+	(ISBN			varchar(30),
 	 staff_id		int,
 	 primary key (ISBN, staff_id),
 	 foreign key (ISBN) references Book
@@ -129,7 +129,7 @@ create table if not exists manage
 
 create table if not exists update_sales
 	(order_number		int,
-	 ISBN 			varchar(15),
+	 ISBN 			varchar(30),
 	 month 			varchar(20) check (month in ('January','February','March','April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 	 year 			int check (year > 1900 and year < 2022),
 	 primary key (order_number, ISBN, month, year),
