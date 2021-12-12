@@ -2,11 +2,13 @@ INSERT INTO Region VALUES('K4B 1P6', 'Ontario', 'Canada');
 INSERT INTO Region VALUES('K1S 5B6', 'Ontario', 'Canada');
 INSERT INTO Region VALUES('H3A 0B8', 'Quebec', 'Canada');
 INSERT INTO Region VALUES('06511', 'Connecticut', 'United States');
+INSERT INTO Region VALUES('K1V 8R9', 'Ontario', 'Canada');
 
 INSERT INTO Address VALUES(100001, 5525, 'Boundary Rd', 'Navan', 'K4B 1P6');
 INSERT INTO Address VALUES(100002, 1125, 'Colonel By Dr', 'Ottawa', 'K1S 5B6');
 INSERT INTO Address VALUES(100003, 680, 'Sherbrooke St W', 'Montreal', 'H3A 0B8');
 INSERT INTO Address VALUES(100004, 77, 'Broadway', 'New Haven', '06511');
+INSERT INTO Address VALUES(100005, 2515, 'Bank St', 'Ottawa', 'K1V 8R9');
 
 INSERT INTO Warehouse VALUES(1000001, 100001);
 
@@ -67,3 +69,16 @@ INSERT INTO Book VALUES('532-48-33164-88-3','Tess of the d''Urbervilles','Herman
 						
 INSERT INTO Staff VALUES(10001, 'bookstore@gmail.com');
 INSERT INTO Staff VALUES(10002, 'bookstore@gmail.com');
+
+INSERT INTO Client Values(1001, 'Christopher Shen', 'christophershen@cmail.carleton.ca', 737111, 100005);
+
+INSERT INTO BankAccount Values(100001, 5000);
+INSERT INTO BankAccount Values(100002, 13000);
+INSERT INTO BankAccount Values(100003, 50000);
+INSERT INTO BankAccount Values(100004, 44000);
+
+INSERT INTO client_account Values(1001, 100001);
+
+INSERT INTO publisher_account Values(100000001, 100001);
+INSERT INTO publisher_account Values(100000002, 100001);
+INSERT INTO publisher_account Values(100000003, 100001);
