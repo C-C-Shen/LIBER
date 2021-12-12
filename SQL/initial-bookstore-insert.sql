@@ -79,6 +79,6 @@ INSERT INTO BankAccount Values(100004, 44000);
 
 INSERT INTO client_account Values(1001, 100001);
 
-INSERT INTO publisher_account Values(100000001, 100001);
-INSERT INTO publisher_account Values(100000002, 100001);
-INSERT INTO publisher_account Values(100000003, 100001);
+INSERT INTO publisher_account Values(100000001, 100002);
+INSERT INTO publisher_account Values(100000002, 100003);
+INSERT INTO publisher_account Values(100000003, 100004);
