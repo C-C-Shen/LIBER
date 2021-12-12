@@ -79,19 +79,19 @@ $$
 	end;
 $$;
 
-create or replace function checkout_func(target_ISBN varchar(30), target_client int, client_bank int, target_order int, new_quantity int) 
+create or replace function checkout_book(target_ISBN varchar(30), client_bank int, target_order int, new_quantity int) 
 	returns boolean
 	language plpgsql as
 $$
 	declare
-		p_id			int				:= (select publisher_id from Book where ISBN = target_ISBN);
+		p_id			int		:= (select publisher_id from Book where ISBN = target_ISBN);
 		pre_tax			numeric(12,2)	:= (select price from Book where Book.ISBN = target_ISBN) * new_quantity;
 		with_tax		numeric(12,2)	:= pre_tax * 1.13;
 		p_cut			numeric(12,2)	:= pre_tax * (select publisher_percent from Book where ISBN = target_ISBN) * 0.01;
-		revenue_final	numeric(12,2)	:= with_tax - p_cut;
-		curr_month		varchar(20) := (select month from get_curr_month());
-		curr_year		int := (select year from get_curr_month());
-		error_val		boolean := FALSE;
+		revenue_final		numeric(12,2)	:= with_tax - p_cut;
+		curr_month		varchar(20) 	:= (select month from get_curr_month());
+		curr_year		int 		:= (select year from get_curr_month());
+		error_val		boolean 	:= FALSE;
 	begin		
 		if ((select stock FROM Book WHERE Book.ISBN = target_ISBN) >= new_quantity) and
 			((select amount FROM BankAccount Where BankAccount.account_number = client_bank) >= with_tax) THEN
@@ -146,6 +146,8 @@ $$
 			insert into Orders (order_placement_date, status, final_total, address_id, warehouse_id) values(current_timestamp, 'PENDING', 0, target_address, target_warehouse);
 
 			select currval(pg_get_serial_sequence('Orders', 'order_number')) into target_order; 
+
+			insert into tracks values (target_order, target_client);
 
 			return target_order;
 	end;
