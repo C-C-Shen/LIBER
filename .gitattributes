@@ -1,1 +1,3 @@
 SQL/*.sql linguist-detectable=true
+css/semantic.* linguist-detectable=false
+css/icon.css linguist-detectable=false
