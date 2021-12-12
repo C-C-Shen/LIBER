@@ -76,6 +76,12 @@ INSERT INTO BankAccount Values(100001, 5000);
 INSERT INTO BankAccount Values(100002, 13000);
 INSERT INTO BankAccount Values(100003, 50000);
 INSERT INTO BankAccount Values(100004, 44000);
+INSERT INTO BankAccount Values(100005, 200);
+INSERT INTO BankAccount Values(100006, 10000);
+INSERT INTO BankAccount Values(100007, 9000);
+INSERT INTO BankAccount Values(100008, 5600);
+INSERT INTO BankAccount Values(100009, 23000);
+INSERT INTO BankAccount Values(100010, 500);
 
 INSERT INTO client_account Values(1001, 100001);
 
