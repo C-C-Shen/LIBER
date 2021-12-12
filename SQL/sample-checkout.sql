@@ -1,5 +1,4 @@
-DELETE FROM Orders;
-DELETE FROM Checkout;
+delete from Orders;
+delete from Checkout;
 
-INSERT INTO Orders VALUES(1000001, current_timestamp, 'PENDING', 0, 100005, 1000001);
-SELECT checkout_func('668-54-24160-15-0', 1001, 100001, 1000001, 1);
+select checkout_func('668-54-24160-15-0', 1001, 100001, (select place_order(1000001, 100005, 1000001)), 1);

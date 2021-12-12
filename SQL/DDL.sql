@@ -105,7 +105,7 @@ create table if not exists Sales
 	);
 
 create table if not exists Orders
-	(order_number 		int,
+	(order_number 		serial,
 	 order_placement_date 	Date not null,
 	 status 		varchar(15) check (status in ('PENDING', 'SHIPPED', 'ARRIVED')),
 	 final_total 		Numeric(12,2) not null,
@@ -129,7 +129,7 @@ create table if not exists manage
 	);
 
 create table if not exists update_sales
-	(order_number		int,
+	(order_number		serial,
 	 ISBN 			varchar(30),
 	 month 			varchar(20) check (month in ('January','February','March','April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
 	 year 			int check (year > 1900 and year < 2022),
@@ -141,7 +141,7 @@ create table if not exists update_sales
 	);
 
 create table if not exists handle_account
-	(order_number		int,
+	(order_number		serial,
 	 account_number		int,
 	 primary key (order_number, account_number),
 	 foreign key (order_number) references Orders
@@ -171,7 +171,7 @@ create table if not exists publisher_account
 	);
 
 create table if not exists tracks
-	(order_number		int,
+	(order_number		serial,
 	 client_id 		int,
 	 primary key (order_number),
 	 foreign key (order_number) references Orders
@@ -192,7 +192,8 @@ create table if not exists emails
 
 create table if not exists checkout
 	(ISBN			varchar(30),
-	 order_number		int,
+	 order_number		serial,
+	 quantity		int,
 	 primary key (ISBN, order_number),
 	 foreign key (ISBN) references Book
 	 	on delete cascade,
