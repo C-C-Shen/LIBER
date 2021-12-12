@@ -45,19 +45,26 @@ return
 end;		
 $$;
 
-create or replace function order_books() returns trigger AS 
+create or replace function order_books() returns trigger as
 '
 	declare 
 		order_month varchar(20);
 		order_year int;
+		new_stock int;
 
 	begin
-		IF NEW.stock < NEW.threshold then
+		if NEW.stock < NEW.threshold then
 			select month into order_month from get_prev_month();
 			select year into order_year from get_prev_month();
 
+			select sales_by_month_per_book(NEW.ISBN, order_month, order_year) into new_stock;
+
+			if new_stock is NULL then
+				select 2 * NEW.threshold into new_stock;
+			end if;
+
 			update Book
-			set stock = stock + sales_by_month_per_book(ISBN, order_month, order_year)
+			set stock = stock + new_stock
 			where Book.ISBN = NEW.ISBN;
 		end if;
 		return NEW;

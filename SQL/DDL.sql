@@ -1,3 +1,4 @@
+drop table checkout;
 drop table emails;
 drop table tracks;
 drop table publisher_account;
@@ -54,7 +55,7 @@ create table if not exists Book
 	 number_of_pages 	int not null,
 	 cost 			numeric(4,2) not null,
 	 price 			numeric(4,2) not null,
-	 publisher_percent 	numeric(2,2) not null,
+	 publisher_percent 	numeric(4,2) not null,
 	 stock 			int not null,
 	 threshold 		int not null,
 	 primary key (ISBN),
@@ -186,5 +187,15 @@ create table if not exists emails
 	 foreign key (staff_id) references Staff
 	 	on delete cascade,
 	 foreign key (publisher_id) references Publisher
+	 	on delete cascade
+	);
+
+create table if not exists checkout
+	(ISBN			varchar(30),
+	 order_number		int,
+	 primary key (ISBN, order_number),
+	 foreign key (ISBN) references Book
+	 	on delete cascade,
+	 foreign key (order_number) references Orders
 	 	on delete cascade
 	);
