@@ -147,4 +147,70 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 
     return $genres;
   }
+
+  /**
+   * Verifies the client based on id and email.
+   * @param id id of the client.
+   * @param email email of the client.
+   * @return client the Client object.
+   */
+  function verifyClient($id, $email){
+    $sql = "SELECT * FROM Client WHERE client_id = ? AND email = ?";
+
+    $pdo = setConnectionInfo();
+    $result = runQuery($pdo, $sql, Array($id, $email));
+    $pdo = null;
+
+    if ($row = $result->fetch()){
+      return new Client($row);
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Verifies the staff based on id and email.
+   * @param id id of the staff.
+   * @param email email of the staff.
+   * @return staff the Staff object.
+   */
+  function verifyStaff($id, $email){
+    $sql = "SELECT * FROM Staff WHERE staff_id = ? AND email = ?";
+
+    $pdo = setConnectionInfo();
+    $result = runQuery($pdo, $sql, Array($id, $email));
+    $pdo = null;
+
+    if ($row = $result->fetch()){
+      return new Staff($row);
+    } else {
+      return null;
+    }
+  }
+
+  function registerClient($name, $email, $phone, $account, $building_num, $street, $city, $state, $country, $postal){
+    $pdo = setConnectionInfo();
+
+    $sql = "INSERT INTO Region VALUES(?, ?, ?)";
+    runQuery($pdo, $sql, Array($postal, $state, $country));
+
+    $address_id = crc32($postal);
+
+    $sql = "INSERT INTO Address VALUES(?, ?, ?, ?, ?)";
+    runQuery($pdo, $sql, Array($address_id, $building_num, $street, $city, $postal));
+
+    $sql = "INSERT INTO Client(name, email, phone_number, address_id) VALUES(?, ?, ?, ?)";
+    runQuery($pdo, $sql, Array($name, $email, $phone, $address_id));
+
+    $sql = "SELECT get_latest_client_id() AS client_id";
+    $res = runQuery($pdo, $sql);
+
+    $client_id = $res->fetch(PDO::FETCH_ASSOC)['client_id'];
+
+    $sql = "INSERT INTO client_account VALUES(?, ?)";
+    runQuery($pdo, $sql, Array($client_id, $account));
+
+    return verifyClient($client_id, $email);
+  }
+
 ?>

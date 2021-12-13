@@ -25,7 +25,7 @@
                   Account
                     <i class="dropdown icon"></i>
                   <div class="menu">
-                    <a class="item"><i class="sign in icon"></i> Login</a>
+                    <a class="item" href="login.php"><i class="sign in icon"></i> Login</a>
                   </div>
                 </div>       
                 <a class=" item" href = "cart.php">
