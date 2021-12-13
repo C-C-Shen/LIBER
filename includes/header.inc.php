@@ -30,6 +30,7 @@
                     <i class="dropdown icon"></i>
                   <div class="menu">
                     <a class="item" href="login.php"><i class="sign in icon"></i> Login</a>
+                    <a class="item" href="login.php?logout=true"><i class="sign out icon"></i> Logout</a>
                   </div>
                 </div>       
                 <a class=" item" href = "cart.php">

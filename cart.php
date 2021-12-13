@@ -52,6 +52,8 @@
                     
                     </tr>';
             }
+
+            $_SESSION['CartTotal'] = $total * 1.13;
         }
     ?> 
 
@@ -64,6 +66,13 @@
         ?>
     </li>
 
-    </ul>        
+    <li class="item">
+        <h2> Cart Total After Tax: $
+        <?php
+            echo number_format($_SESSION['CartTotal'],2,'.',',').'</h2>';
+        ?>
+    </li>
+    
+</ul>        
 </section>  
 

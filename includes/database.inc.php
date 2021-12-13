@@ -100,7 +100,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
       echo '<h4> BOOKS FILTERED BY'.$filters.'<br/> [TOP 20] </h4>';
     }
 
-    $sql = $sql." ORDER BY cost LIMIT 20;";
+    $sql = $sql." AND stock > 0 ORDER BY cost LIMIT 20;";
     $pdo = setConnectionInfo();
 
     $result = runQuery($pdo, $sql, Array($isbn, $title, $author, $genre));
@@ -188,16 +188,24 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     }
   }
 
+  /**
+   * Registers a new client into the system.
+   * @param name the name of the client.
+   * @param email email address of the client.
+   * @param phone phone number of the client.
+   * @param account account number of the client.
+   * @param building_num street address of the client address.
+   * @param street street name of the client address.
+   * @param city city name of the client address.
+   * @param state state name of the client address.
+   * @param country country name of the client address.
+   * @param postal postal code.
+   * @return client the new client.
+   */
   function registerClient($name, $email, $phone, $account, $building_num, $street, $city, $state, $country, $postal){
+    $address_id = createAddress($building_num, $street, $city, $state, $country, $postal);
+
     $pdo = setConnectionInfo();
-
-    $sql = "INSERT INTO Region VALUES(?, ?, ?)";
-    runQuery($pdo, $sql, Array($postal, $state, $country));
-
-    $address_id = crc32($postal);
-
-    $sql = "INSERT INTO Address VALUES(?, ?, ?, ?, ?)";
-    runQuery($pdo, $sql, Array($address_id, $building_num, $street, $city, $postal));
 
     $sql = "INSERT INTO Client(name, email, phone_number, address_id) VALUES(?, ?, ?, ?)";
     runQuery($pdo, $sql, Array($name, $email, $phone, $address_id));
@@ -210,7 +218,128 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $sql = "INSERT INTO client_account VALUES(?, ?)";
     runQuery($pdo, $sql, Array($client_id, $account));
 
+    $pdo = null;
+
     return verifyClient($client_id, $email);
   }
 
+  /**
+   * This function is in charge of getting the current order status.
+   * @param client_id the id of the client.
+   * @param order_id the order number.
+   */
+  function getOrderStatus($client_id, $order_id){
+    $sql = "SELECT status FROM tracks NATURAL JOIN Orders WHERE client_id = ? AND order_number = ?";
+
+    $pdo = setConnectionInfo();
+    $res = runQuery($pdo, $sql, Array($client_id, $order_id));
+    $pdo = null;
+
+    $status = $res->fetch(PDO::FETCH_ASSOC);
+
+    if (isset($status['status'])){
+      return $status['status'];
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Checks to see if the user can afford the order.
+   * @param account the account number of the client.
+   * @param total the cart total.
+   * @return true if the client can afford the total.
+   */
+  function canAffordOrder($account,$total){
+    $sql = "SELECT amount FROM BankAccount WHERE account_number = ?";
+
+    $pdo = setConnectionInfo();
+    $res = runQuery($pdo, $sql, Array($account));
+    $pdo = null;
+
+    $amount = $res->fetch(PDO::FETCH_ASSOC)['amount'];
+
+    if ($amount >= $total){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Creates an address element from the given parameters. 
+   * @param building_num street address of the client address.
+   * @param street street name of the client address.
+   * @param city city name of the client address.
+   * @param state state name of the client address.
+   * @param country country name of the client address.
+   * @param postal postal code.
+   * @return address_id the address_id of the new address.
+   */
+  function createAddress($building_num, $street, $city, $state, $country, $postal){
+    $pdo = setConnectionInfo();
+
+    $address_id = (int)crc32($postal);
+
+    $sql = "SELECT count(address_id) AS num_address FROM Address WHERE address_id = ?";
+    $res = runQuery($pdo, $sql, Array($address_id));
+
+    if ($res->fetch(PDO::FETCH_ASSOC)['num_address'] == 0){
+      $sql = "INSERT INTO Region VALUES(?, ?, ?)";
+      runQuery($pdo, $sql, Array($postal, $state, $country));
+
+
+      $sql = "INSERT INTO Address VALUES(?, ?, ?, ?, ?)";
+      runQuery($pdo, $sql, Array($address_id, $building_num, $street, $city, $postal));
+    }
+
+    $pdo = null;
+    
+    return $address_id;
+  }
+
+  /**
+   * Places an order for the client and the address.
+   * @param client_id the id of the client.
+   * @param address_id the address_id of the order.
+   * @return order_number the order_number of the new order.
+   */
+  function place_order($client_id, $address_id){
+    $sql = "SELECT place_order(?, ?, 1) AS order_number";
+
+    $pdo = setConnectionInfo();
+    $res = runQuery($pdo, $sql, Array($client_id, $address_id));
+    $pdo = null;
+
+    return $res->fetch(PDO::FETCH_ASSOC)['order_number'];
+  }
+
+  /**
+   * Handles checking out a single book item.
+   * @param isbn the isbn of the book.
+   * @param account the account number of the client.
+   * @param order_number the current order_number.
+   * @param quantity the number of books to checkout.
+   */
+  function checkout($isbn, $account, $order_number, $quantity){
+    $sql = "SELECT checkout_book(?, ?, ?, ?)";
+
+    $pdo = setConnectionInfo();
+    $res = runQuery($pdo, $sql, Array($isbn, $account, $order_number, $quantity));
+    $pdo = null;
+  }
+
+  function updateClientAccount($client_id, $account){
+    $pdo = setConnectionInfo();
+
+    $sql = "SELECT count(client_id) AS num_client FROM client_account WHERE client_id = ? AND account_number = ?";
+    $res = runQuery($pdo, $sql, Array($client_id, $account));
+
+    if ($res->fetch(PDO::FETCH_ASSOC)['num_client'] == 0){
+      $sql = "INSERT INTO client_account VALUES(?, ?)";
+      runQuery($pdo, $sql, Array($client_id, $account));
+    }
+
+    $pdo = null;
+  }
 ?>

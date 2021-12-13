@@ -6,6 +6,12 @@
 
 
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
+        if (isset($_GET["logout"])){
+            $_SESSION['User'] = null;
+            $_SESSION['UserType'] = null;
+            $_SESSION['ID'] = null;
+            header("Location: home.php");
+        }
         if (isset($_GET["id"]) && isset($_GET["email"]) && isset($_GET["type"])){
           $id = $_GET["id"];
           $email = $_GET["email"];
