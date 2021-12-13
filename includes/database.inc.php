@@ -202,7 +202,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $sql = "INSERT INTO Client(name, email, phone_number, address_id) VALUES(?, ?, ?, ?)";
     runQuery($pdo, $sql, Array($name, $email, $phone, $address_id));
 
-    $sql = "SELECT get_latest_client_id() AS client_id";
+    $sql = "SELECT currval(pg_get_serial_sequence('Client', 'client_id'))  AS client_id";
     $res = runQuery($pdo, $sql);
 
     $client_id = $res->fetch(PDO::FETCH_ASSOC)['client_id'];

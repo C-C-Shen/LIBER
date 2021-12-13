@@ -45,14 +45,14 @@
      * The class Client keeps track of the client information.
      */
     class Client{
-        public $client_id;
+        public $id;
         public $client_name;
         public $email;
         public $phone;
         public $address_id;
 
         function __construct($record){
-            $this->client_id = $record['client_id'];
+            $this->id = $record['client_id'];
             $this->client_name = $record['name'];
             $this->email = $record['email'];
             $this->phone = $record['phone_number'];
@@ -64,11 +64,11 @@
      * The class Manager keeps track of the manager information.
      */
     class Staff{
-        public $staff_id;
+        public $id;
         public $email;
 
         function __construct($record){
-            $this->staff_id = $record['staff_id'];
+            $this->id = $record['staff_id'];
             $this->email = $record['email'];
         }
     }

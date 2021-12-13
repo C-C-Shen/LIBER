@@ -17,6 +17,10 @@
 </head>
 <body >
 <header>
+    <?php
+      session_start();
+    ?>
+
     <div class="ui attached stackable grey inverted  menu">
         <div class="ui container">
             <nav class="right menu">            
@@ -31,8 +35,6 @@
                 <a class=" item" href = "cart.php">
                   <i class="shop icon"></i> Cart &nbsp;
                   <?php
-                      session_start();
-
                       if (isset($_SESSION['Cart'])){
                         $cart_items = $_SESSION['Cart'];
                         $bookCount = count($cart_items);
@@ -42,7 +44,16 @@
 
                       echo '<i class = "inverted bordered red icon">'.$bookCount.'</i>';
                   ?>
-                </a>                                     
+                </a> 
+                <p>
+                  <?php
+                    if (isset($_SESSION['User'])){
+                      echo 'Logged in as: '.$_SESSION['UserType'].'<br/> ID: '.$_SESSION['ID'];
+                    } else {
+                      echo 'Not logged in';
+                    }
+                  ?> 
+              </p>                                    
             </nav>            
         </div>     
     </div>   

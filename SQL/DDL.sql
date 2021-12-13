@@ -25,7 +25,7 @@ create table if not exists Region
 	);
 	
 create table if not exists Address
-	(address_id		int,
+	(address_id		serial,
 	 building_num		int,
 	 street			varchar(50),
 	 city 			varchar(50),
@@ -40,7 +40,7 @@ create table if not exists Publisher
 	 name			varchar(50) not null,
 	 email			varchar(50),
 	 phone_number 		int not null,
-	 address_id 		int,
+	 address_id 		serial,
 	 primary key (publisher_id),
 	 foreign key (address_id) references Address
 	 	 	on delete set null
@@ -71,7 +71,7 @@ create table if not exists Staff
 	
 create table if not exists Warehouse
 	(warehouse_id		int,
-	 address_id		int,
+	 address_id		serial,
 	 primary key (warehouse_id),
 	 foreign key (address_id) references Address
 	 	on delete set null
@@ -82,7 +82,7 @@ create table if not exists Client
 	 name 			varchar(50) not null,
 	 email 			varchar(50) not null,
 	 phone_number 		int,
-	 address_id 		int,
+	 address_id 		serial,
 	 primary key (client_id),
 	 foreign key (address_id) references Address
 	 	on delete set null
@@ -109,7 +109,7 @@ create table if not exists Orders
 	 order_placement_date 	Date not null,
 	 status 		varchar(15) check (status in ('PENDING', 'SHIPPED', 'ARRIVED')),
 	 final_total 		Numeric(12,2) not null,
-	 address_id 		int not null,
+	 address_id 		serial not null,
 	 warehouse_id 		int not null,
 	 primary key (order_number),
 	 foreign key (address_id) references Address
