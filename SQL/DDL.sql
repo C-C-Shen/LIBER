@@ -78,7 +78,7 @@ create table if not exists Warehouse
 	);
 	
 create table if not exists Client
-	(client_id 		int,
+	(client_id 		serial,
 	 name 			varchar(50) not null,
 	 email 			varchar(50) not null,
 	 phone_number 		int,
@@ -151,7 +151,7 @@ create table if not exists handle_account
 	);
 
 create table if not exists client_account
-	(client_id		int,
+	(client_id		serial,
 	 account_number 	int,
 	 primary key (client_id, account_number),
 	 foreign key (client_id) references Client
@@ -172,7 +172,7 @@ create table if not exists publisher_account
 
 create table if not exists tracks
 	(order_number		serial,
-	 client_id 		int,
+	 client_id 		serial,
 	 primary key (order_number),
 	 foreign key (order_number) references Orders
 	 	on delete cascade,

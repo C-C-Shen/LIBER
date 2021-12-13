@@ -70,7 +70,7 @@ INSERT INTO Book VALUES('532-48-33164-88-3','Tess of the d''Urbervilles','Herman
 INSERT INTO Staff VALUES(10001, 'bookstore@gmail.com');
 INSERT INTO Staff VALUES(10002, 'bookstore@gmail.com');
 
-INSERT INTO Client Values(1001, 'Christopher Shen', 'christophershen@cmail.carleton.ca', 737111, 100005);
+INSERT INTO Client(name, email, phone_number, address_id) Values('Christopher Shen', 'christophershen@cmail.carleton.ca', 737111, 100005);
 
 INSERT INTO BankAccount Values(100001, 5000);
 INSERT INTO BankAccount Values(100002, 13000);
@@ -82,8 +82,6 @@ INSERT INTO BankAccount Values(100007, 9000);
 INSERT INTO BankAccount Values(100008, 5600);
 INSERT INTO BankAccount Values(100009, 23000);
 INSERT INTO BankAccount Values(100010, 500);
-
-INSERT INTO client_account Values(1001, 100001);
 
 INSERT INTO publisher_account Values(100000001, 100002);
 INSERT INTO publisher_account Values(100000002, 100003);
