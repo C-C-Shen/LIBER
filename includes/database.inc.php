@@ -95,9 +95,9 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     }
 
     if ($filters == ""){
-      echo '<h4> ALL PAINTINGS [TOP 20] </h4>';
+      echo '<h4> ALL BOOKS [TOP 20] </h4>';
     } else {
-      echo '<h4> PAINTINGS FILTERED BY'.$filters.'<br/> [TOP 20] </h4>';
+      echo '<h4> BOOKS FILTERED BY'.$filters.'<br/> [TOP 20] </h4>';
     }
 
     $sql = $sql." ORDER BY cost LIMIT 20;";

@@ -28,19 +28,19 @@
                     <a class="item"><i class="sign in icon"></i> Login</a>
                   </div>
                 </div>       
-                <a class=" item">
+                <a class=" item" href = "cart.php">
                   <i class="shop icon"></i> Cart &nbsp;
                   <?php
                       session_start();
 
-                      if (isset($_SESSION['Favourites'])){
-                        $favourte_list = $_SESSION['Favourites'];
-                        $favCount = count($favourte_list);
+                      if (isset($_SESSION['Cart'])){
+                        $cart_items = $_SESSION['Cart'];
+                        $bookCount = count($cart_items);
                       } else {
-                        $favCount = 0;
+                        $bookCount = 0;
                       }
 
-                      echo '<i class = "inverted bordered red icon">'.$favCount.'</i>';
+                      echo '<i class = "inverted bordered red icon">'.$bookCount.'</i>';
                   ?>
                 </a>                                     
             </nav>            
@@ -50,11 +50,11 @@
     <div class="ui attached stackable borderless huge menu">
         <div class="ui container">
             <h2 class="header item">
-              <a href="browse-books.php">
+              <a href="home.php">
                 <img src="images/logo.jpg" class="ui small image">
               </a>
             </h2>  
-            <a class="item" href="browse-books.php">
+            <a class="item" href="home.php">
               <i class="home icon"></i> Home
             </a> 
             <a class="item" href="track.php">
