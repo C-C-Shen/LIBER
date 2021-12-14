@@ -119,14 +119,19 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    * Gets the book based on the ISBN.
    * @param isbn the isbn of the book
    */
+   
   function getBookByISBN($isbn = ""){
     $sql = "SELECT * FROM Book  NATURAL JOIN Publisher WHERE ISBN = ?";
     $pdo = setConnectionInfo();
 
     $result = runQuery($pdo, $sql, Array($isbn));
     $pdo = null;
-
-    return new Book($result->fetch());
+	
+	// Check if got some result from query
+	if ($row = $result->fetch()) {
+		return new Book($row);
+	}
+    return null;
   } 
 
   /**
@@ -359,5 +364,44 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $res = runQuery($pdo, $sql);
 
     $pdo = null;
+  }
+  
+  /**
+   * Changes an existing book's attributes in the Book table.
+   * @param isbn the target book.
+   * @param cost the new cost to assign.
+   * @param price the new price to assign.
+   * @param publisher_percent the new publisher percentage to assign.
+   * @param stock the new number of books in stock.
+   * @param threshold the new book threshold value.
+   */
+  function manage_existing_book($isbn, $cost, $price, $publisher_percent, $stock, $threshold) {
+	  $sql = "SELECT * FROM Book  NATURAL JOIN Publisher WHERE ISBN = ?";
+	  $pdo = setConnectionInfo();
+
+      $result = runQuery($pdo, $sql, Array($isbn));
+	  
+	  $t_book = new Book($result->fetch());
+	  
+	  // If none of the attributes are different, then an update is not needed.
+	  if ($t_book->cost == $cost && $t_book->price == $price && $t_book->publisher_percent == $publisher_percent
+		  && $t_book->stock == $stock && $t_book->threshold == $threshold) {
+		$pdo = null;
+		
+		return "No Changes To Save";
+	  }
+	  
+	  // Check if the changes are valid values.
+	  if ($cost >= 0 && $price >= 0 && $publisher_percent >= 0 && $stock >= 0 && $threshold >= 0) {
+		  $sql = "UPDATE Book SET cost = ?, price = ?, publisher_percent = ?, stock = ?, threshold = ? WHERE isbn = ?";
+		  
+		  $result = runQuery($pdo, $sql, Array($cost, $price, $publisher_percent, $stock, $threshold, $isbn));
+		  $pdo = null;
+		  
+		  return "Changes Saved";
+	  }
+	  
+	  $pdo = null;
+	  return "Invalid Changes";	  
   }
 ?>
