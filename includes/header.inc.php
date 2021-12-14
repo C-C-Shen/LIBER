@@ -79,10 +79,18 @@
             </a> 
             <a class="item" href="track.php">
               <i class="globe icon"></i> Track Your Order
-            </a>  
-            <a class="item" href="manage.php">
-              <i class="edit icon"></i> Manage Books
-            </a>                        
+            </a>
+			<?php
+			  if (isset($_SESSION['User']) && $_SESSION['UserType'] == "staff"){
+				echo '
+				  <a class="item" href="manage.php">
+					<i class="edit icon"></i> Manage Books
+				  </a>
+				  <a class="item" href="reports.php">
+					<i class="edit icon"></i> Sales Reports
+				  </a>';
+			  }
+			?>
         </div>
     </div>       
 </header> 
