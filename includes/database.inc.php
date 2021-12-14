@@ -329,6 +329,11 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $pdo = null;
   }
 
+  /**
+   * Adds the client bankaccount to the client_account table.
+   * @param client_id the id of the client.
+   * @param account the account number of tghe client.
+   */
   function updateClientAccount($client_id, $account){
     $pdo = setConnectionInfo();
 
@@ -339,6 +344,19 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
       $sql = "INSERT INTO client_account VALUES(?, ?)";
       runQuery($pdo, $sql, Array($client_id, $account));
     }
+
+    $pdo = null;
+  }
+
+
+  /**
+   * Changes the status of the orders.
+   */
+  function updateOrders(){
+    $pdo = setConnectionInfo();
+
+    $sql = "CALL update_orders()";
+    $res = runQuery($pdo, $sql);
 
     $pdo = null;
   }

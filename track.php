@@ -1,8 +1,5 @@
 <?php
     require_once('includes/header.inc.php');
-    require_once('includes/liber-config.inc.php');
-    require_once('includes/database.inc.php');
-    require_once('includes/classes.inc.php');
 
     if (!isset($_SESSION['User'])){
         header("Location: login.php");
@@ -40,7 +37,7 @@
                     echo '<h2> Your order has been shipped </h2>';
                     echo '<img src="images/shipping/shipped.jpg">';
                 } else if ($status == "ARRIVED"){
-                    echo '<h2> Your order has been arrived! </h2>';
+                    echo '<h2> Your order has arrived! </h2>';
                     echo '<img src="images/shipping/arrived.jpg">';
                 } else {
                     echo '<h2> Could not find your order :( </h2>';

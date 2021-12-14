@@ -1,8 +1,5 @@
 <?php
   require_once('includes/header.inc.php');
-  require_once('includes/liber-config.inc.php');
-  require_once('includes/database.inc.php');
-  require_once('includes/classes.inc.php');
 
   $genres = getGenres();
 ?>

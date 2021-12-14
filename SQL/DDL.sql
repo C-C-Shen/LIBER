@@ -106,7 +106,7 @@ create table if not exists Sales
 
 create table if not exists Orders
 	(order_number 		serial,
-	 order_placement_date 	Date not null,
+	 order_placement_date 	timestamp not null,
 	 status 		varchar(15) check (status in ('PENDING', 'SHIPPED', 'ARRIVED')),
 	 final_total 		Numeric(12,2) not null,
 	 address_id 		serial not null,

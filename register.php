@@ -1,10 +1,6 @@
 
 <?php
     require_once('includes/header.inc.php');
-    require_once('includes/liber-config.inc.php');
-    require_once('includes/database.inc.php');
-    require_once('includes/classes.inc.php');
-
 
     if ($_SERVER["REQUEST_METHOD"] == "GET"){
         if (isset($_GET["name"]) && isset($_GET["email"]) && isset($_GET["phone"]) && isset($_GET["account"]) && isset($_GET["building_num"]) && isset($_GET["street"])

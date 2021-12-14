@@ -14,13 +14,21 @@
     <link href="css/styles.css" rel="stylesheet">  
 
     <link rel="shortcut icon" type="image/x-icon" href="images/logo.jpg" />
+
+    <?php
+      session_start();
+
+      require_once('includes/header.inc.php');
+      require_once('includes/liber-config.inc.php');
+      require_once('includes/database.inc.php');
+      require_once('includes/classes.inc.php');
+    ?>
 </head>
 <body >
 <header>
-    <?php
-      session_start();
-    ?>
-
+  <?php 
+    updateOrders();
+  ?>
     <div class="ui attached stackable grey inverted  menu">
         <div class="ui container">
             <nav class="right menu">            
