@@ -43,7 +43,7 @@ C:\xampp\htdocs
    
 3. Once both the Apache server and the Postgres servers are running you can start the program by going to the following url:
 ```
-http://localhost/liber/home.php
+http://localhost/LIBER/home.php
 ```
 
 ## Using LIBER
