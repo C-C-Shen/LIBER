@@ -25,9 +25,9 @@
             <th>Action</th>
         </tr>
     <?php 
+        $total = 0;
         if (isset($_SESSION['Cart'])){
             $cart_items = $_SESSION['Cart'];
-            $total = 0;
 
             foreach($cart_items as $book){
                 $total += $book[3] * $book[2];
@@ -66,7 +66,7 @@
     <li class="item">
         <h2> Cart Total After Tax: $
         <?php
-            echo number_format($_SESSION['CartTotal'],2,'.',',').'</h2>';
+            echo number_format($total * 1.13,2,'.',',').'</h2>';
         ?>
     </li>
     

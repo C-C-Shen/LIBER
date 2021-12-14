@@ -18,7 +18,6 @@
     <?php
       session_start();
 
-      require_once('includes/header.inc.php');
       require_once('includes/liber-config.inc.php');
       require_once('includes/database.inc.php');
       require_once('includes/classes.inc.php');
@@ -87,7 +86,7 @@
 					<i class="edit icon"></i> Manage Books
 				  </a>
 				  <a class="item" href="reports.php">
-					<i class="edit icon"></i> Sales Reports
+					<i class="money icon"></i> Sales Reports
 				  </a>';
 			  }
 			?>

@@ -10,7 +10,51 @@
 
 <section class="five wide column">
     <h3 class="ui dividing header">Checkout</h3>
-    <form class="ui form" method="GET">
+
+    <?php
+        if ($_SERVER["REQUEST_METHOD"] == "GET"){
+            if (isset($_GET["account"]) && isset($_GET["building_num"]) && isset($_GET["street"]) && isset($_GET["city"]) 
+                && isset($_GET["state"]) && isset($_GET["country"]) && isset($_GET["postal"])){
+
+                $account = $_GET["account"];
+                $building_num = $_GET["building_num"];
+                $street = $_GET["street"];
+      
+                $city = $_GET["city"];
+                $state = $_GET["state"];
+                $country = $_GET["country"];
+      
+                $postal = $_GET["postal"];
+
+                if ($_SESSION['CartTotal'] == 0){
+                    echo '<h2> Your cart is empty </h2>';
+                } else if (!canAffordOrder($account,$_SESSION['CartTotal'])){
+                    echo '<h2> Your do not have enough money in your account :( </h2>';
+                } else {
+                    updateClientAccount($_SESSION["ID"], $account);
+                    
+                    $address_id = createAddress($building_num, $street, $city, $state, $country, $postal);
+                    $order_number = place_order($_SESSION["ID"], $address_id);
+
+                    $cart_items = $_SESSION['Cart'];
+
+                    foreach($cart_items as $book){
+                        checkout($book[0], $account, $order_number, $book[2]);
+                    }
+
+                    echo '<h2> Your order was placed successfuly! Your order number is '.$order_number.' </h2>';
+
+                    $_SESSION["Cart"] = Array();
+                    $_SESSION["CartTotal"] = 0;
+
+                    return;
+                }
+                    
+            }
+        }
+    ?>
+
+<form class="ui form" method="GET">
         <h4 class="ui dividing header">Banking Information</h4>
 
         <div class="field">
@@ -69,46 +113,6 @@
         </button>     
     </form>
 
-    <?php
-        if ($_SERVER["REQUEST_METHOD"] == "GET"){
-            if (isset($_GET["account"]) && isset($_GET["building_num"]) && isset($_GET["street"]) && isset($_GET["city"]) 
-                && isset($_GET["state"]) && isset($_GET["country"]) && isset($_GET["postal"])){
-
-                $account = $_GET["account"];
-                $building_num = $_GET["building_num"];
-                $street = $_GET["street"];
-      
-                $city = $_GET["city"];
-                $state = $_GET["state"];
-                $country = $_GET["country"];
-      
-                $postal = $_GET["postal"];
-
-                if ($_SESSION['CartTotal'] == 0){
-                    echo '<h2> Your cart is empty </h2>';
-                } else if (!canAffordOrder($account,$_SESSION['CartTotal'])){
-                    echo '<h2> Your do not have enough money in your account :( </h2>';
-                } else {
-                    updateClientAccount($_SESSION["ID"], $account);
-                    
-                    $address_id = createAddress($building_num, $street, $city, $state, $country, $postal);
-                    $order_number = place_order($_SESSION["ID"], $address_id);
-
-                    $cart_items = $_SESSION['Cart'];
-
-                    foreach($cart_items as $book){
-                        checkout($book[0], $account, $order_number, $book[2]);
-                    }
-
-                    echo '<h2> Your order was placed successfuly! Your order number is '.$order_number.' </h2>';
-
-                    $_SESSION["Cart"] = Array();
-                    $_SESSION["CartTotal"] = 0;
-                }
-                    
-            }
-        }
-    ?>
 </section>
 </main>   
 
