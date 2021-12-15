@@ -65,6 +65,9 @@ $$
 		new_stock int;
 	begin
 		if NEW.stock < NEW.threshold then
+			insert into  emails select 10001, NEW.publisher_id
+			where not exists (select publisher_id from emails where publisher_id = NEW.publisher_id);
+	
 			select month into order_month from get_prev_month();
 			select year into order_year from get_prev_month();
 			select sales_by_month_per_book(NEW.ISBN, order_month, order_year) into new_stock;
@@ -136,7 +139,7 @@ $$
 $$;
 
 
-create or replace function place_order(target_client int, target_address int, target_warehouse int)
+create or replace function place_order(target_client int, target_address bigint, target_warehouse int)
 	returns int
 	language plpgsql as
 $$
