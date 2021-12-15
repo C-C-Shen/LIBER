@@ -39,7 +39,7 @@ create table if not exists Publisher
 	(publisher_id		int,
 	 name			varchar(50) not null,
 	 email			varchar(50),
-	 phone_number 		int not null,
+	 phone_number 		bigint not null,
 	 address_id 		bigint,
 	 primary key (publisher_id),
 	 foreign key (address_id) references Address
@@ -81,7 +81,7 @@ create table if not exists Client
 	(client_id 		serial,
 	 name 			varchar(50) not null,
 	 email 			varchar(50) not null,
-	 phone_number 		int,
+	 phone_number 		bigint,
 	 address_id 		bigint,
 	 primary key (client_id),
 	 foreign key (address_id) references Address

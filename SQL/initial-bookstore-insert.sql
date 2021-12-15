@@ -11,6 +11,7 @@ INSERT INTO Address VALUES(100004, 77, 'Broadway', 'New Haven', '06511');
 INSERT INTO Address VALUES(100005, 2515, 'Bank St', 'Ottawa', 'K1V 8R9');
 
 INSERT INTO Warehouse VALUES(1, 100001);
+INSERT INTO Warehouse VALUES(2, 100001);
 
 INSERT INTO Publisher VALUES(100000001, 'Good Books Publishing', 'goodbookspublishing@gmail.com', 1, 100002);
 INSERT INTO Publisher VALUES(100000002, 'Joe and Smiths', 'joe_smiths@gmail.com', 2, 100003);

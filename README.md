@@ -26,7 +26,7 @@ The recommended software for running an Apache server is an instance of the XAMP
 LIBER was developed using PostgreSQL and as a result a proper installation of PostgreSQL is required. The latest version of this software can be found here:\
 [Install PostgreSQL](https://www.postgresql.org/download/)
 
-3. After PostgreSQL is installed make sure locate to the [SQL](https://github.com/bardia-p/LIBER/tree/master/SQL) folder to find the dump file for the Bookstore database.
+3. After PostgreSQL is installed make sure locate to the [SQL](https://github.com/bardia-p/LIBER/tree/master/SQL) folder to find the [dump]([SQL](https://github.com/bardia-p/LIBER/tree/master/SQL/Bookstore-dump.sql))file for the Bookstore database.
 4. Create a local version of that database and name it "Bookstore" and load the dump file.
 5. Locate to the [liber-config.inc.php](https://github.com/bardia-p/LIBER/blob/master/includes/liber-config.inc.php) file to change the username and pass with your version.
 6. Move the updated version of the repository under the "htdocs" folder in the installation folder for XAMPP. The path will most likely be the following for windows machines: 

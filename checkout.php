@@ -114,5 +114,11 @@
     </form>
 
 </section>
-</main>   
+</main>  
+
+  <footer class="ui black inverted segment">
+      <div class="ui container">LIBER Bookstore - www.LIBER.com</div>
+  </footer>
+</body>
+</html>
 

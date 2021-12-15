@@ -213,6 +213,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $pdo = setConnectionInfo();
 
     $sql = "INSERT INTO Client(name, email, phone_number, address_id) VALUES(?, ?, ?, ?)";
+    
     runQuery($pdo, $sql, Array($name, $email, $phone, $address_id));
 
     $sql = "SELECT currval(pg_get_serial_sequence('Client', 'client_id'))  AS client_id";
@@ -309,9 +310,12 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    * @return order_number the order_number of the new order.
    */
   function place_order($client_id, $address_id){
-    $sql = "SELECT place_order(".$client_id.", ".$address_id.", 1) AS order_number";
-
     $pdo = setConnectionInfo();
+
+    $warehouse_id = getWarehouseID();
+
+    $sql = "SELECT place_order(".$client_id.", ".$address_id.", ".$warehouse_id.") AS order_number";
+
     $res = runQuery($pdo, $sql);
     $pdo = null;
 
@@ -423,7 +427,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 	  $pdo = setConnectionInfo();
 	  
 	  // Check if he publisher exists
-      $result = runQuery($pdo, $sql, Array($publisher));
+    $result = runQuery($pdo, $sql, Array($publisher));
 	  
 	  // Checkl that the ISBN does not already exist, then check if the publisher is valid
 	  if (getBookByISBN($isbn)) {
@@ -456,7 +460,28 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 	  $sql = "DELETE FROM Book WHERE isbn = ?";
 	  $pdo = setConnectionInfo();
 	  
-      $result = runQuery($pdo, $sql, Array($isbn));
+    $result = runQuery($pdo, $sql, Array($isbn));
 	  $pdo = null; 
+  }
+
+  /**
+   * Returns a random warehouse_id from the list of warehouses.
+   */
+  function getWarehouseID(){
+    $sql = "SELECT warehouse_id FROM Warehouse";
+	  $pdo = setConnectionInfo();
+
+    $result = runQuery($pdo, $sql);
+	  $pdo = null; 
+
+    $warehouses = Array();
+    $rows = $result->fetchAll();
+    foreach($rows as $row){
+        $warehouses[] = $row['warehouse_id'];
+    }
+
+    $warehouse_index = rand(0, sizeof($warehouses) - 1);
+
+    return $warehouses[$warehouse_index];
   }
 ?>
