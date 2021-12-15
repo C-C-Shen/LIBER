@@ -429,7 +429,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 	  if (getBookByISBN($isbn)) {
 		  return $isbn . " Already Exists, Add Cancelled";
 	  } else if (!($row = $result->fetch())) {
-		  return $punlisher . " Publisher Could Not Be Found, Add Cancelled";
+		  return $publisher . " Publisher Could Not Be Found, Add Cancelled";
 	  }
 	  
 	  // Check if the values of the book to add are valid.
