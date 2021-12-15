@@ -309,10 +309,10 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    * @return order_number the order_number of the new order.
    */
   function place_order($client_id, $address_id){
-    $sql = "SELECT place_order(?, ?, 1) AS order_number";
+    $sql = "SELECT place_order(".$client_id.", ".$address_id.", 1) AS order_number";
 
     $pdo = setConnectionInfo();
-    $res = runQuery($pdo, $sql, Array($client_id, $address_id));
+    $res = runQuery($pdo, $sql);
     $pdo = null;
 
     return $res->fetch(PDO::FETCH_ASSOC)['order_number'];
