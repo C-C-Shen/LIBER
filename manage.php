@@ -66,10 +66,10 @@
 			  } else {
 				  $isbn = $books->isbn;
 				  $title = $books->title;
-				  $author_name = $books->title;
-				  $genre = $books->author_name;
-				  $publisher = $books->genre;
-				  $num_pages = $books->publisher;
+				  $author_name = $books->author_name;
+				  $genre = $books->genre;
+				  $publisher = $books->publisher;
+				  $num_pages = $books->num_pages;
 				  $cost = $books->cost;
 				  $price = $books->price;
 				  $publisher_percent = $books->publisher_percent;
