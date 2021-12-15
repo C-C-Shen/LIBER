@@ -285,14 +285,13 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $pdo = setConnectionInfo();
 
     $address_id = (int)crc32($postal);
-
+    
     $sql = "SELECT count(address_id) AS num_address FROM Address WHERE address_id = ?";
     $res = runQuery($pdo, $sql, Array($address_id));
 
     if ($res->fetch(PDO::FETCH_ASSOC)['num_address'] == 0){
       $sql = "INSERT INTO Region VALUES(?, ?, ?)";
       runQuery($pdo, $sql, Array($postal, $state, $country));
-
 
       $sql = "INSERT INTO Address VALUES(?, ?, ?, ?, ?)";
       runQuery($pdo, $sql, Array($address_id, $building_num, $street, $city, $postal));
@@ -310,10 +309,10 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    * @return order_number the order_number of the new order.
    */
   function place_order($client_id, $address_id){
-    $sql = "SELECT place_order(?, ?, 1) AS order_number";
+    $sql = "SELECT place_order(".$client_id.", ".$address_id.", 1) AS order_number";
 
     $pdo = setConnectionInfo();
-    $res = runQuery($pdo, $sql, Array($client_id, $address_id));
+    $res = runQuery($pdo, $sql);
     $pdo = null;
 
     return $res->fetch(PDO::FETCH_ASSOC)['order_number'];
