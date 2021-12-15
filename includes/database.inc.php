@@ -285,7 +285,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $pdo = setConnectionInfo();
 
     $address_id = (int)crc32($postal);
-    
+
     $sql = "SELECT count(address_id) AS num_address FROM Address WHERE address_id = ?";
     $res = runQuery($pdo, $sql, Array($address_id));
 
@@ -309,10 +309,10 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    * @return order_number the order_number of the new order.
    */
   function place_order($client_id, $address_id){
-    $sql = "SELECT place_order(".$client_id.", ".$address_id.", 1) AS order_number";
+    $sql = "SELECT place_order(?, ?, 1) AS order_number";
 
     $pdo = setConnectionInfo();
-    $res = runQuery($pdo, $sql);
+    $res = runQuery($pdo, $sql, Array($client_id, $address_id));
     $pdo = null;
 
     return $res->fetch(PDO::FETCH_ASSOC)['order_number'];
@@ -368,19 +368,18 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
   /**
    * Changes an existing book's attributes in the Book table.
    * @param isbn the target book.
-   * @param cost the new cost to assign.
-   * @param price the new price to assign.
+   * @param cost the new cost to the bookstore.
+   * @param price the new price to the client.
    * @param publisher_percent the new publisher percentage to assign.
    * @param stock the new number of books in stock.
    * @param threshold the new book threshold value.
    */
   function manage_existing_book($isbn, $cost, $price, $publisher_percent, $stock, $threshold) {
-	  $sql = "SELECT * FROM Book  NATURAL JOIN Publisher WHERE ISBN = ?";
 	  $pdo = setConnectionInfo();
-
-      $result = runQuery($pdo, $sql, Array($isbn));
 	  
-	  $t_book = new Book($result->fetch());
+	  if (!($t_book = getBookByISBN($isbn))) {
+		  return "Could Not Find" . $isbn;
+	  }
 	  
 	  // If none of the attributes are different, then an update is not needed.
 	  if ($t_book->cost == $cost && $t_book->price == $price && $t_book->publisher_percent == $publisher_percent
@@ -391,16 +390,73 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 	  }
 	  
 	  // Check if the changes are valid values.
-	  if ($cost >= 0 && $price >= 0 && $publisher_percent >= 0 && $stock >= 0 && $threshold >= 0) {
+	  if ($cost >= 0 && $cost <= 99 && $price >= 0 && $price <= 99 && $publisher_percent >= 0 && $publisher_percent <= 99 && $stock >= 0 && $threshold >= 0) {
 		  $sql = "UPDATE Book SET cost = ?, price = ?, publisher_percent = ?, stock = ?, threshold = ? WHERE isbn = ?";
 		  
 		  $result = runQuery($pdo, $sql, Array($cost, $price, $publisher_percent, $stock, $threshold, $isbn));
 		  $pdo = null;
 		  
+		  echo '<script> location.reload(); </script>';
 		  return "Changes Saved";
 	  }
 	  
 	  $pdo = null;
 	  return "Invalid Changes";	  
+  }
+  
+  /**
+   * Insert/create a new book tuple in the Book table
+   * @param isbn the target book.
+   * @param title the title of new book.
+   * @param author_name the author of the new book.
+   * @param genre the publisher percent cut of the new book.
+   * @param publisher the publisher of the new book.
+   * @param num_pages the number of pages in the new book.
+   * @param cost the cost of the book to the bookstore.
+   * @param price the new price of the book to the client.
+   * @param publisher_percent the publisher percentage cut for the book.
+   * @param stock the number of books in stock.
+   * @param threshold the restock threshold.
+   */
+  function add_new_book($isbn, $title, $author_name, $genre, $publisher, $num_pages, $cost, $price, $publisher_percent, $stock, $threshold) {
+	  $sql = "SELECT * FROM Publisher WHERE publisher_id = ?";
+	  $pdo = setConnectionInfo();
+	  
+	  // Check if he publisher exists
+      $result = runQuery($pdo, $sql, Array($publisher));
+	  
+	  // Checkl that the ISBN does not already exist, then check if the publisher is valid
+	  if (getBookByISBN($isbn)) {
+		  return $isbn . " Already Exists, Add Cancelled";
+	  } else if (!($row = $result->fetch())) {
+		  return $punlisher . " Publisher Could Not Be Found, Add Cancelled";
+	  }
+	  
+	  // Check if the values of the book to add are valid.
+	  if ($title != "" && $author_name != "" && $genre != "" && $num_pages > 0 && $cost >= 0 && $cost <= 99 && $price >= 0 && $price <= 99 && $publisher_percent >= 0 && $publisher_percent <= 99
+		  && $stock >= 0 && $threshold >= 0) {
+		  $sql = "INSERT INTO Book VALUEs(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		  
+		  $result = runQuery($pdo, $sql, Array($isbn, $title, $author_name, $genre, $publisher, $num_pages, $cost, $price, $publisher_percent, $stock, $threshold));
+		  $pdo = null;
+		  
+		  echo '<script> location.reload(); </script>';
+		  return "Book Added";
+	  }
+	  
+	  $pdo = null;
+	  return "Invalid Book Parameters";	 
+  }
+  
+  /**
+   * Deletes a book tuple from Book table
+   * @param isbn the target book to delete.
+   */
+  function delete_book($isbn) {
+	  $sql = "DELETE FROM Book WHERE isbn = ?";
+	  $pdo = setConnectionInfo();
+	  
+      $result = runQuery($pdo, $sql, Array($isbn));
+	  $pdo = null; 
   }
 ?>
