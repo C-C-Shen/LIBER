@@ -120,7 +120,7 @@ $$
 			else
 				update Sales
 				set quantity = quantity + new_quantity
-				where Sales.month = curr_month and Sales.year = curr_year;
+				where Sales.isbn = target_isbn and Sales.month = curr_month and Sales.year = curr_year;
 			end if;
 
 			insert into update_sales values(target_order, target_ISBN, curr_month, curr_year);
