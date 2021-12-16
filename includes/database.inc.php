@@ -427,7 +427,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 	  $pdo = setConnectionInfo();
 	  
 	  // Check if he publisher exists
-    $result = runQuery($pdo, $sql, Array($publisher));
+	  $result = runQuery($pdo, $sql, Array($publisher));
 	  
 	  // Checkl that the ISBN does not already exist, then check if the publisher is valid
 	  if (getBookByISBN($isbn)) {
@@ -469,7 +469,7 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
    */
   function getWarehouseID(){
     $sql = "SELECT warehouse_id FROM Warehouse";
-	  $pdo = setConnectionInfo();
+	$pdo = setConnectionInfo();
 
     $result = runQuery($pdo, $sql);
 	  $pdo = null; 
@@ -483,5 +483,112 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     $warehouse_index = rand(0, sizeof($warehouses) - 1);
 
     return $warehouses[$warehouse_index];
+  }
+  
+  function getSalesFig($isbn, $author_name, $genre, $publisher, $from_date, $to_date) {
+	  $pdo = setConnectionInfo();
+	  
+	  $currYM = date('Y-m');
+	  $currY = date('Y');
+	  
+	  $viewToUse = 'allSales';
+	  
+	  // If one of the date values is blank (but not the other), treat is as a single month range
+	  if ($from_date == "" && $to_date != "") {
+		  $from_date = $to_date;
+	  } else if ($from_date != "" && $to_date == "") {
+		  $to_date = $from_date;
+	  }
+	  
+	  $fromY = 'true';
+	  $fromM = 'true';
+	  $toM = 'true';
+	  $toY = 'true'; 
+	  
+	  if ($from_date != "" && $to_date != "") {
+		  // position [0] is the year, position [1] is the month
+		  $fromArr = explode('-', $from_date);
+		  $fromY = (int)$fromArr[0];
+		  $fromM = date("F", mktime(0, 0, 0, (int)$fromArr[1], 10));  // convert to string
+		  $toArr =  explode('-', $to_date);
+		  $toY = (int)$toArr[0];
+		  $toM = date("F", mktime(0, 0, 0, (int)$toArr[1], 10));  // convert to string
+	  }
+	  
+	  // Check if the date range given is the current month
+	  if (strcmp($currYM, $from_date) == 0 && strcmp($currYM, $to_date) == 0) {
+		  $viewToUse = 'allCurrMonthSales';
+	  } else if (strcmp($currY . '-01', $from_date) == 0 && strcmp($currY . '-12', $to_date) == 0) {
+		  $viewToUse = 'allCurrYearSales';
+	  }
+	  $sql = "select * from ". $viewToUse ." NATURAL JOIN Book WHERE";
+	  $filters = "";
+	  
+	  // Check if a specific ISBN is specified
+	  if ($isbn != "") {
+		  $filters = $filters." isbn = ?";
+		  $sql = $sql." isbn = ?"; 
+	  } else {
+		  $isbn = 'true';
+		  $sql = $sql." ?"; 
+	  }
+	  $sql = $sql." AND"; 
+	  
+	  // If using the single month view (on current month) or if no date range is specified, we do not need to include the complex WHERE condition
+	  if ($from_date != "" && $to_date != "" && strcmp($viewToUse, 'allCurrMonthSales') != 0) {
+		  $filters = $filters." from_date = ?, to_date = ?";
+		  // where TRUE and ((to_date(month, 'Month') >= to_date('April', 'Month') AND year >= 2020) OR (year > 2020)) AND ((to_date(month, 'Month') <= to_date('November', 'Month') AND year <= 2021) OR (year < 2021))
+		  $sql = $sql." ((to_date(month, 'Month') >= to_date(?, 'Month') AND year >= ?) OR (year > ?)) AND ((to_date(month, 'Month') <= to_date(?, 'Month') AND year <= ?) OR (year < ?)) AND"; 
+	  } else {
+		  $from_date = 'true';
+		  $to_date = 'true';
+		  $sql = $sql." ? AND ? AND ? AND ? AND ? AND ? AND"; 
+	  }	  
+	  
+	  if ($author_name == "" || $author_name == "null"){
+		  $author_name = 'true';
+		  $sql = $sql." ? AND";
+	  } else {
+		  $filters = $filters." author_name = '".$author_name."'";
+		  $author_name = '%'.strtoupper($author_name).'%';
+		  $sql = $sql." upper(Book.author_name) LIKE ? AND";
+	  }
+
+	  if ($genre == "" || $genre == "null"){
+		  $genre = 'true';
+		  $sql = $sql." ? AND";
+	  } else {
+		  $filters = $filters." genre = '".$genre."'";
+		  $sql = $sql." Book.genre = ? AND";
+	  }
+		
+	  if ($publisher == "" || $publisher == "null"){
+		  $publisher = 'true';
+		  $sql = $sql." ?";
+	  } else {
+		  $filters = $filters." title = '".$publisher."'";
+		  $sql = $sql." Book.publisher_id = ?";
+	  }
+
+	  $result = runQuery($pdo, $sql, Array($isbn, $fromM, $fromY, $fromY, $toM, $toY, $toY, $author_name, $genre, $publisher));
+
+      $rows = $result->fetchAll();	  
+	  $salesArr = Array();
+	  foreach($rows as $row){
+		  $salesArr[] = new Sales($row);
+	  }
+	  foreach($salesArr as $singleSale) {
+		  $tempBook = getBookByISBN($singleSale->isbn);
+		  $total = $tempBook->price * $singleSale->quantity;
+		  $singleSale->revenue = $total - ($total * $tempBook->publisher_percent * 0.01);
+		  $singleSale->expense = $tempBook->cost * $singleSale->quantity;
+		  
+		  print $singleSale->isbn . " [Date] " . $singleSale->month . " " . $singleSale->year . " Quantity of: " .
+		  $singleSale->quantity . " Total Revenue of: " . $singleSale->revenue . " Total Expense of: " . $singleSale->expense;
+		  echo '<br>';
+	  }
+	  
+	  $pdo = null;
+	  return $salesArr;
   }
 ?>

@@ -72,4 +72,25 @@
             $this->email = $record['email'];
         }
     }
+	
+	/**
+     * The class Sales keeps track of the sales information.
+     */
+    class Sales{
+        public $isbn;
+        public $month;
+        public $year;
+        public $quantity;
+		public $revenue;
+		public $expense;
+
+        function __construct($record){
+            $this->isbn = $record['isbn'];
+            $this->month = $record['month'];
+            $this->year = $record['year'];
+            $this->quantity = $record['quantity'];
+			$this->revenue = 0;
+			$this->expense = 0;
+        }
+    }
 ?>
