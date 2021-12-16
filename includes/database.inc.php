@@ -509,11 +509,6 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 		  $to_date = $from_date;
 	  }
 	  
-	  $fromY = 'true';
-	  $fromM = 'true';
-	  $toM = 'true';
-	  $toY = 'true'; 
-	  
 	  if ($from_date != "" && $to_date != "") {
 		  // position [0] is the year, position [1] is the month
 		  $fromArr = explode('-', $from_date);
@@ -549,8 +544,10 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 		  // where TRUE and ((to_date(month, 'Month') >= to_date('April', 'Month') AND year >= 2020) OR (year > 2020)) AND ((to_date(month, 'Month') <= to_date('November', 'Month') AND year <= 2021) OR (year < 2021))
 		  $sql = $sql." ((to_date(month, 'Month') >= to_date(?, 'Month') AND year >= ?) OR (year > ?)) AND ((to_date(month, 'Month') <= to_date(?, 'Month') AND year <= ?) OR (year < ?)) AND"; 
 	  } else {
-		  $from_date = 'true';
-		  $to_date = 'true';
+		  $fromY = 'true';
+		  $fromM = 'true';
+		  $toM = 'true';
+		  $toY = 'true';
 		  $sql = $sql." ? AND ? AND ? AND ? AND ? AND ? AND"; 
 	  }	  
 	  
