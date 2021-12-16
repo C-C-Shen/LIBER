@@ -4,6 +4,8 @@
   if (!isset($_SESSION['User']) && !($_SESSION['UserType'] == "staff")){
 	header("Location: login.php");
   } 
+
+  $genres = getGenres();
 ?>
 
 <main class="ui segment doubling stackable grid container">
@@ -20,10 +22,14 @@
           </div>
 		  <div class="field">
             <label>By Genre</label>
-            <div class="ui mini icon input">
-                <input name="genre" type="text" placeholder="genre...">
-                <i class="search icon"></i>
-            </div>
+            <select name="genre" class="ui fluid dropdown">
+              <option></option>  
+              <?php 
+                foreach($genres as $genre){
+                  echo '<option>'.$genre->genreName.'</option>';
+                }
+              ?>
+            </select>
           </div>
 		  <div class="field">
             <label>By Author</label>
@@ -56,7 +62,6 @@
 	<section class="eleven wide column">
 		<h1 class="ui header">Sales Information Panel</h1>
 		<ul class="ui divided items" id="booksList">
-
 			
 		<?php
 		  $isbn = "";
