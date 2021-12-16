@@ -578,23 +578,13 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
 
 	  $result = runQuery($pdo, $sql, Array($isbn, $fromM, $fromY, $fromY, $toM, $toY, $toY, $author_name, $genre, $publisher));
 
-      $rows = $result->fetchAll();	  
+    $rows = $result->fetchAll();	  
 	  $salesArr = Array();
+    
 	  foreach($rows as $row){
 		  $salesArr[] = new Sales($row);
 	  }
-	  foreach($salesArr as $singleSale) {
-		  $tempBook = getBookByISBN($singleSale->isbn);
-		  $total = $tempBook->price * $singleSale->quantity;
-		  $singleSale->revenue = $total - ($total * $tempBook->publisher_percent * 0.01);
-		  $singleSale->expense = $tempBook->cost * $singleSale->quantity;
-		  
-		  print $singleSale->isbn . " [Date] " . $singleSale->month . " " . $singleSale->year . " Quantity of: " .
-		  $singleSale->quantity . " Total Revenue of: " . $singleSale->revenue . " Total Expense of: " . $singleSale->expense;
-		  echo '<br>';
-	  }
-	  
-	  $pdo = null;
-	  return $salesArr;
+
+    return $salesArr;
   }
 ?>
