@@ -485,6 +485,15 @@ function fetchBooks($isbn = "", $title = "", $author = "", $genre = ""){
     return $warehouses[$warehouse_index];
   }
   
+  /**
+   * Returns all sales reports that match a search parameters, along with revenue and expense values
+   * @param isbn the target book.
+   * @param author_name the target author..
+   * @param genre the target genre.
+   * @param publisher the target publisher.
+   * @param from_date lower bound of date search.
+   * @param to_date upper bound of date serach.
+   */
   function getSalesFig($isbn, $author_name, $genre, $publisher, $from_date, $to_date) {
 	  $pdo = setConnectionInfo();
 	  
