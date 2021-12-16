@@ -2,7 +2,7 @@
   require_once('includes/header.inc.php');
   
   if (!isset($_SESSION['User']) && !($_SESSION['UserType'] == "staff")){
-	header("Location: login.php");
+	  header("Location: login.php");
   } 
 ?>
 
@@ -18,7 +18,8 @@
                 <i class="search icon"></i>
             </div>
           </div>
-		  <div class="field">
+          
+		    <div class="field">
             <label>By Genre</label>
             <select name="genre" class="ui fluid dropdown">
               <option></option>  
@@ -30,28 +31,34 @@
                 }
               ?>
             </select>
-          </div>
-		  <div class="field">
+        </div>
+
+		    <div class="field">
             <label>By Author</label>
             <div class="ui mini icon input">
                 <input name="author_name" type="text" placeholder="author...">
                 <i class="search icon"></i>
             </div>
-          </div>
-		  <div class="field">
+        </div>
+
+		    <div class="field">
             <label>By Publisher</label>
             <div class="ui mini icon input">
                 <input name="publisher" type="text" placeholder="publisher...">
                 <i class="search icon"></i>
             </div>
+        </div>
+
+		    <div class="field">
+            <label>Date Range:</label>
+            <label>From: </label>
+            <input name="from_date" type="month">
+        </div>    
+
+          <div class="field">
+            <label>To: </label>
+				    <input name="to_date" type="month">
           </div>
-		  <div class="field">
-            <label>Date Range: [From] -> [To]</label>
-            <div class="ui mini icon input">
-                <input name="from_date" type="month">
-				<input name="to_date" type="month">
-            </div>
-          </div>    
 
           <button class="small ui orange button" type="submit">
             <i class="filter icon"></i> Continue 
@@ -97,19 +104,89 @@
         foreach($allSalesData as $singleSale) {
           $tempBook = getBookByISBN($singleSale->isbn);
           $total = $tempBook->price * $singleSale->quantity;
-          $singleSale->revenue = $total - ($total * $tempBook->publisher_percent * 0.01);
-          $singleSale->expense = $tempBook->cost * $singleSale->quantity;
+          $singleSale->revenue = number_format($total - ($total * $tempBook->publisher_percent * 0.01), 2, '.', '');
+          $singleSale->expense = number_format($tempBook->cost * $singleSale->quantity, 2, '.', '');
                 
           echo '<tr><td style="text-align: center;">'.$singleSale->isbn.'</td>
                     <td style="text-align: center;">'.$singleSale->month.'</td>
                     <td style="text-align: center;">'.$singleSale->year.'</td>
                     <td style="text-align: center;">'.$singleSale->quantity.'</td>
-                    <td style="text-align: center;">'.$singleSale->revenue.'</td>
-                    <td style="text-align: center;">'.$singleSale->expense.'</td></tr>';            
+                    <td style="text-align: center;">$'.$singleSale->revenue.'</td>
+                    <td style="text-align: center;">$'.$singleSale->expense.'</td></tr>';            
           }
       ?>
+    </table>
 
-      </table>
+    <br>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <div class="container">
+          <canvas id="saleschart" width="100" height="50"></canvas>
+      </div>
+        
+    <script>
+            <?php
+              $isbns = "[";
+              foreach($allSalesData as $singleSale) {
+                $isbns = $isbns."'".$singleSale->isbn."', ";
+              }
+              $isbns = $isbns."]";
+
+              echo 'var dataArray = '.$isbns.';';
+            ?>
+
+            var ctx = document.getElementById("saleschart");
+            var myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: dataArray,
+                    datasets: [{
+                            label: "Expenses",
+
+                            <?php
+                              $data = "[";
+                              foreach($allSalesData as $singleSale) {
+                                $data = $data.$singleSale->expense.", ";
+                              }
+                              $data = $data."]";
+
+                              echo 'data: '.$data.',';
+                            ?>
+
+                            borderColor: [
+                                "rgba(255,0,0,1)",
+                            ],
+                            borderWidth: 1
+                        },{
+                            label: "Revenues",
+
+                            <?php
+                              $data = "[";
+                              foreach($allSalesData as $singleSale) {
+                                $data = $data.$singleSale->revenue.", ";
+                              }
+                              $data = $data."]";
+
+                              echo 'data: '.$data.',';
+                            ?>
+
+                            borderColor: [
+                                "rgba(0,255,0,1)",
+                            ],
+                            borderWidth: 1
+                        }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                    }
+                }
+            });
+        </script>
 	</section>
 </main>    
     
