@@ -43,7 +43,7 @@ DELETE FROM Book WHERE isbn = '668-54-24160-15-0';
 
 SELECT warehouse_id FROM Warehouse;
 
-SELECT * FROM ". $viewToUse ." NATURAL JOIN Book WHERE ((to_date(month, 'Month') >= to_date('January', 'Month') AND 2020 >= ?) OR (year > 2020))
+SELECT * FROM ". $viewToUse ." NATURAL JOIN Book WHERE ((to_date(month, 'Month') >= to_date('January', 'Month') AND year >= 2020) OR (year > 2020))
 AND ((to_date(month, 'Month') <= to_date('April', 'Month') AND year <= 2021) OR (year < 2021)) AND upper(Book.author_name) LIKE 'Jules Verne'
 AND Book.genre = 'Crime' AND Book.publisher_id = 100000001;
 
