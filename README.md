@@ -6,7 +6,7 @@
 
 by Bardia Parmoun and Christopher Shen
 
-Released on: 12/17/2021
+Released on: 12/20/2021
 
 ## Description
 
@@ -51,9 +51,19 @@ For a detailed explanation of how to navigate LIBER, please refer to the followi
 [LIBER Demo]()
 
 ## LIBER Design Process
-If you want to learn more about the design process for LIBER, locate to the following folders:
-1. [ER and Schema Diagrams](https://github.com/bardia-p/LIBER/tree/master/diagrams)
-2. [Design Report](https://github.com/bardia-p/LIBER/blob/master/documents/Project_Report.pdf)
+You can learn more about LIBER's design process through the following diagrams:
+1. ER Diagram
+<p align="center">
+<img src="diagrams/ER_Diagram.JPG" />
+</p>
+
+2. Schema Diagram
+<p align="center">
+<img src="diagrams/Schema_Diagram.JPG" />
+</p>
+
+3. Design Report \
+Locate to [Design Report](https://github.com/bardia-p/LIBER/blob/master/documents/Project_Report.pdf) to learn more about the step by step process of designing and developing LIBER.
 
 ## CREDITS
 Authors: Bardia Parmoun and Christopher Shen

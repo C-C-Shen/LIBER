@@ -65,7 +65,14 @@
                       <?php
                           echo '<td>'.$book->publisher.'</td>';
                       ?>
-                    </tr>       
+                    </tr>   
+                    <tr>                       
+                      <td>
+                        Genre
+                      <?php
+                          echo '<td>'.$book->genre.'</td>';
+                      ?>
+                    </tr>    
                     <tr>
                       <td>
                         Stock
