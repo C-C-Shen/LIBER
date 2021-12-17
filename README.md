@@ -54,12 +54,12 @@ For a detailed explanation of how to navigate LIBER, please refer to the followi
 You can learn more about LIBER's design process through the following diagrams:
 1. ER Diagram
 <p align="center">
-<img src="diagrams/ER_Diagram.JPG" />
+<img src="diagrams/ER_Diagram.jpg" />
 </p>
 
 2. Schema Diagram
 <p align="center">
-<img src="diagrams/Schema_Diagram.JPG" />
+<img src="diagrams/Schema_Diagram.jpg" />
 </p>
 
 3. Design Report \
