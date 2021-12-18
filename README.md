@@ -48,7 +48,7 @@ http://localhost/liber/home.php
 
 ## Using LIBER
 For a detailed explanation of how to navigate LIBER, please refer to the following video:\
-[LIBER Demo]()
+[LIBER Demo](https://www.youtube.com/watch?v=47j_kePWlnQ&feature=youtu.be)
 
 ## LIBER Design Process
 You can learn more about LIBER's design process through the following diagrams:
